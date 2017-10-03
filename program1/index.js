@@ -1,8 +1,5 @@
 const Sequelize = require('sequelize')
 
-
-
-
 const sequelize = new Sequelize('jobdb', 'tcar', 'b8ebcccd', {
     host: 'localhost',
     dialect: 'postgres',
@@ -12,15 +9,7 @@ const sequelize = new Sequelize('jobdb', 'tcar', 'b8ebcccd', {
       min: 0,
       idle: 10000
     },
-  
-  });sequelize
-.authenticate()
-.then(() => {
-  console.log('Connection has been established successfully.');
-})
-.catch(err => {
-  console.error('Unable to connect to the database:', err);
-});
+  });
 
 const Content = sequelize.define('content', {
     id: {
@@ -38,10 +27,8 @@ const Content = sequelize.define('content', {
   sequelize.sync({force: true}).then(()=>{
 
     const nats = require('nats').connect();
-    
     nats.on('connect',(nats)=>{
-        console.log('connected');
-        
+        console.log('connected')
         nats.subscribe('foo', {'queue':'content.add'}, function(data) {
             const obj = JSON.parse(data)
             const future = new Date()
